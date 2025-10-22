@@ -34,4 +34,37 @@ class Position extends Model
             'id_employee'  // Локальный ключ в таблице position_history
         )->whereNull('position_history.end_date');
     }
+
+    
+
+    use HasFactory;
+
+    protected $table = 'positions';
+   
+    public $timestamps = false;
+
+  
+
+    protected $casts = [
+        'salary' => 'integer'
+    ];
+
+    // Связь с историей должностей
+    
+
+    // Связь с сотрудниками через историю должностей
+    public function employees()
+    {
+        return $this->hasManyThrough(
+            Employee::class,
+            PositionHistory::class,
+            'id_position', // Внешний ключ в position_histories
+            'id_employee', // Внешний ключ в employees
+            'id_position', // Локальный ключ в positions
+            'id_employee'  // Локальный ключ в position_histories
+        );
+    }
+     protected $guarded = [];
 }
+
+   

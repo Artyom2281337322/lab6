@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Models\Dismissal;
+use Illuminate\Support\Carbon;
 
 class EmployeeController extends Controller
 {
+    //1 запрос
     public function index()
     {
         $employees = Employee::select(
@@ -26,5 +29,48 @@ class EmployeeController extends Controller
             ->get();
 
         return view('employees.index', compact('employees'));
+    }
+//2 запрос
+    public function index1()
+    {
+        // Используем метод из модели
+        $employees = Employee::getWithSalaries();
+        
+        return view('employees.salaries', compact('employees'));
+    }
+
+    // Альтернативный метод с дополнительной обработкой
+    public function indexWithFormatting()
+    {
+        $employees = Employee::getWithSalaries()
+            ->map(function($employee) {
+                // Добавляем форматированные данные
+                $employee->formatted_salary = number_format($employee->salary, 0, '', ' ') . ' руб.';
+                return $employee;
+            });
+        
+        return view('employees.salaries', compact('employees'));
+    }
+
+    //3 запрос
+     public function dismissed()
+    {
+        // Дата 3 года назад
+        $threeYearsAgo = Carbon::now()->subYears(3);
+
+        $dismissedEmployees = Employee::select(
+                'employees.id_employee',
+                'employees.last_name',
+                'employees.first_name', 
+                'employees.middle_name',
+                'dismissals.date as dismissal_date',
+                'dismissals.reason as dismissal_reason'
+            )
+            ->join('dismissals', 'employees.id_employee', '=', 'dismissals.id_employee')
+            ->where('dismissals.date', '>=', $threeYearsAgo)
+            ->orderBy('dismissals.date', 'DESC')
+            ->get();
+
+        return view('employees.dismissed', compact('dismissedEmployees'));
     }
 }

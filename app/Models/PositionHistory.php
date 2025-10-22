@@ -34,4 +34,27 @@ class PositionHistory extends Model
     {
         return $this->belongsTo(Position::class, 'id_position');
     }
+
+// app/Models/PositionHistory.php
+
+
+    use HasFactory;
+
+    protected $table = 'position_histories';
+ 
+    public $timestamps = false;
+
+
+    // Связь с сотрудником
+    
+    // Связь с должностью
+   
+
+    // Проверка, является ли текущей должностью
+    public function getIsCurrentAttribute()
+    {
+        return $this->end_date === null;
+    }
+     protected $guarded = [];
 }
+   
