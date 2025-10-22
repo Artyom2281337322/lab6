@@ -16,9 +16,6 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="mb-0">Уволенные сотрудники</h1>
-                <a href="{{ route('employees.index') }}" class="btn btn-primary">
-                    👥 Вернуться к сотрудникам
-                </a>
             </div>
             
             <div class="card">
@@ -64,17 +61,11 @@
                             </tbody>
                         </table>
                     </div>
-                    
-                    @if($dismissedEmployees->count())
-                    <div class="mt-3">
-                        <small class="text-muted">Всего уволенных за последние 3 года: {{ $dismissedEmployees->count() }}</small>
-                    </div>
-                    @endif
 
                     
                     <div class="mt-4 text-center">
                         <a href="{{ route('employees.index') }}" class="btn btn-primary btn-lg">
-                            👨‍💼 Вернуться к списку сотрудников
+                            Вернуться к списку сотрудников
                         </a>
                     </div>
                 </div>

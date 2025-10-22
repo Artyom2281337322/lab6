@@ -9,7 +9,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">HR System</a>
+            
             <div class="navbar-nav">
                 <a class="nav-link" href="{{ route('employees.index') }}">Сотрудники</a>
             </div>
