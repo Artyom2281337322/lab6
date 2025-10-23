@@ -60,34 +60,43 @@
                     <!-- Дополнительная кнопка внизу -->
                     <div class="mt-4 text-center">
                         <a href="{{ route('salaries.index') }}" class="btn btn-success">
-                            <i class="fas fa-chart-line"></i> Перейти к просмотру окладов сотрудников
+                            <i class="fas fa-chart-line"></i>  Перейти к просмотру окладов сотрудников
                         </a>
                         <a href="{{ route('employees.departments') }}" class="btn btn-info">
-            Отделы
+           Отделы
         </a>
                         <a href="{{ route('employees.dismissed') }}" class="btn btn-warning">
-            Уволенные
+          Уволенные
         </a>
          <a href="{{ route('employees.departments-stats') }}" class="btn btn-secondary">
-            Статистика
+           Статистика
         </a>
          <a href="{{ route('employees.high-paid-programmers') }}" class="btn btn-warning">
             Программисты
         </a>
         <a href="{{ route('employees.long-term') }}" class="btn btn-info">
-            Долгий стаж
+           Долгий стаж
         </a>
         <a href="{{ route('employees.select-employee') }}" class="btn btn-info">
-            История должностей
+          История должностей
         </a>
         <a href="{{ route('employees.dismissal-stats') }}" class="btn btn-info" style = "margin-top: 10px;">
-            Увольнения по годам
+           Увольнения по годам
         </a>
         <a href="{{ route('employees.cities') }}" class="btn btn-info" style = "margin-top: 10px;">
             Города
         </a>
         <a href="{{ route('employees.moscow-programmers') }}" class="btn btn-warning" style = "margin-top: 10px;">
-            Московские программисты
+          Московские программисты
+        </a>
+        <a href="{{ route('employees.cities-many-employees') }}" class="btn btn-warning" style = "margin-top: 10px;">
+           Города с 5+ сотрудниками
+        </a>
+        <a href="{{ route('employees.average-age-dismissed') }}" class="btn btn-info" style = "margin-top: 10px;">
+            Средний возраст
+        </a>
+        <a href="{{ route('employees.last-dismissed') }}" class="btn btn-danger" style = "margin-top: 10px;">
+            Последний уволенный
         </a>
                     </div>
                 </div>

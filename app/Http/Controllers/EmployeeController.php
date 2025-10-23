@@ -341,4 +341,121 @@ class EmployeeController extends Controller
         return view('employees.moscow-programmers', compact('moscowProgrammers'));
     }
 
+    //13 запрос
+    public function citiesWithManyEmployees()
+    {
+        $citiesWithEmployees = DB::table('cities as c')
+            ->select(
+                'c.id_city',
+                'c.name as city_name',
+                DB::raw('COUNT(e.id_employee) as employees_count')
+            )
+            ->join('employees as e', 'c.id_city', '=', 'e.id_city')
+            ->groupBy('c.id_city', 'c.name')
+            ->having('employees_count', '>', 4)
+            ->orderBy('employees_count', 'DESC')
+            ->orderBy('c.name')
+            ->get();
+
+        return view('employees.cities-many-employees', compact('citiesWithEmployees'));
+    }
+
+    //14 запрос
+    public function averageAgeDismissed()
+    {
+        
+        $averageAgeData = DB::table('employees as e')
+            ->select(
+                DB::raw('AVG(TIMESTAMPDIFF(YEAR, e.birth_date, d.date)) as average_age'),
+                DB::raw('COUNT(e.id_employee) as total_dismissed'),
+                DB::raw('MIN(TIMESTAMPDIFF(YEAR, e.birth_date, d.date)) as min_age'),
+                DB::raw('MAX(TIMESTAMPDIFF(YEAR, e.birth_date, d.date)) as max_age')
+            )
+            ->join('dismissals as d', 'e.id_employee', '=', 'd.id_employee')
+            ->first();
+
+    
+        $dismissedEmployees = DB::table('employees as e')
+            ->select(
+                'e.id_employee',
+                'e.last_name',
+                'e.first_name', 
+                'e.middle_name',
+                'e.birth_date',
+                'd.date as dismissal_date',
+                'd.reason as dismissal_reason',
+                DB::raw('TIMESTAMPDIFF(YEAR, e.birth_date, d.date) as age_at_dismissal')
+            )
+            ->join('dismissals as d', 'e.id_employee', '=', 'd.id_employee')
+            ->orderBy('age_at_dismissal', 'DESC')
+            ->get();
+
+        return view('employees.average-age-dismissed', compact('averageAgeData', 'dismissedEmployees'));
+    }
+
+    //15 запрос
+    public function lastDismissedEmployee()
+    {
+        
+        $lastDismissed = DB::table('employees as e')
+            ->select(
+                'e.id_employee',
+                'e.last_name',
+                'e.first_name', 
+                'e.middle_name',
+                'e.gender',
+                'e.birth_date',
+                'd.date as dismissal_date',
+                'd.reason as dismissal_reason',
+                DB::raw('TIMESTAMPDIFF(YEAR, e.birth_date, CURDATE()) as current_age'),
+                DB::raw('TIMESTAMPDIFF(YEAR, e.birth_date, d.date) as age_at_dismissal')
+            )
+            ->join('dismissals as d', 'e.id_employee', '=', 'd.id_employee')
+            ->orderBy('d.date', 'DESC')
+            ->first();
+
+        if (!$lastDismissed) {
+            return view('employees.last-dismissed', ['lastDismissed' => null]);
+        }
+
+        
+        $totalExperience = DB::table('position_history')
+            ->select(
+                DB::raw('SUM(DATEDIFF(COALESCE(end_date, CURDATE()), start_date)) as total_days')
+            )
+            ->where('id_employee', $lastDismissed->id_employee)
+            ->first();
+
+   
+        $experience = $this->formatExperience($totalExperience->total_days ?? 0);
+
+       
+        $fullNameFormatted = $this->formatFullName($lastDismissed->last_name, $lastDismissed->first_name, $lastDismissed->middle_name);
+
+        return view('employees.last-dismissed', compact('lastDismissed', 'experience', 'fullNameFormatted'));
+    }
+
+   
+    private function formatExperience($totalDays)
+    {
+        $years = floor($totalDays / 365);
+        $remainingDays = $totalDays % 365;
+        $months = floor($remainingDays / 30);
+        $days = $remainingDays % 30;
+
+        return [
+            'years' => $years,
+            'months' => $months,
+            'days' => $days,
+            'total_days' => $totalDays
+        ];
+    }
+
+    private function formatFullName($lastName, $firstName, $middleName)
+    {
+        $firstInitial = mb_substr($firstName, 0, 1) . '.';
+        $middleInitial = $middleName ? mb_substr($middleName, 0, 1) . '.' : '';
+        
+        return $lastName . ' ' . $firstInitial . $middleInitial;
+    }
 }

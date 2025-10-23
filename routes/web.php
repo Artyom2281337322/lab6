@@ -45,3 +45,12 @@ Route::get('/employees/cities', [EmployeeController::class, 'employeesCities'])
 
 Route::get('/employees/moscow-programmers', [EmployeeController::class, 'moscowProgrammers'])
     ->name('employees.moscow-programmers');
+
+Route::get('/employees/cities-many-employees', [EmployeeController::class, 'citiesWithManyEmployees'])
+    ->name('employees.cities-many-employees');
+
+Route::get('/employees/average-age-dismissed', [EmployeeController::class, 'averageAgeDismissed'])
+    ->name('employees.average-age-dismissed');
+
+Route::get('/employees/last-dismissed', [EmployeeController::class, 'lastDismissedEmployee'])
+    ->name('employees.last-dismissed');
